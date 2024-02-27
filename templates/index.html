@@ -1,9 +1,38 @@
 
 {% extends "layout2.html" %}
 {% block content %}
-            <div class="w-1/2 text-center">
-                <h1 class="text-5xl font-mono">Flask UI</h1>
-            </div>
+
+{% import '_macros.html' as macros %}
+            <h1>Hola desde alumnos</h1>
+
+            <form name="sent" action="/index" id="contactForm" method="POST" >
+                <div class="row control-row">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{macros.camposNuevos(form.nombre, class="form-control")}}        
+                    </div>
+                </div>
+                <div class="row control-row">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{macros.camposNuevos(form.apaterno, class="form-control")}}        
+                    </div>
+                </div>
+                <div class="row control-row">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{macros.camposNuevos(form.amaterno, class="form-control")}}        
+                    </div>
+                </div>
+                <div class="row control-row">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{macros.camposNuevos(form.email, class="form-control")}}        
+                    </div>
+                </div>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+
+                <input type="submit" id="btn1" name="btn1" value="Registrar">
+            </form>
+
+
 {% endblock %}
     
 
