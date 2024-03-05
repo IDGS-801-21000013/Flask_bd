@@ -7,7 +7,6 @@ from wtforms import EmailField
 from wtforms.validators import DataRequired, Email, Length
 
 class UserForm(Form):
-    
     nombre=StringField("Nombre", [validators.DataRequired(message="El campo es requerido"), validators.length(min=4,max=10, message="Ingresa uun nombre valido")])
     a_paterno=StringField("Apellido Paterno", [validators.DataRequired(message="El campo es requerido"), validators.length(min=4,max=10, message="Ingresa un apellido valido")])
     a_materno=StringField("Apellido Materno", [validators.DataRequired(message="El campo es requerido"), validators.length(min=4,max=10, message="Ingresa un apellido valido")])

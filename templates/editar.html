@@ -1,0 +1,45 @@
+
+{% extends "layout2.html" %}
+{% block content %}
+
+{% import '_macros.html' as macros %}
+            <h1>Eliminar</h1>
+
+            <form name="editar" action="/editar" id="contactForm" method="POST" >
+                <div class="row control-row">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{macros.camposNuevos(form.id, class="form-control", readonly="readonly")}}        
+                    </div>
+                </div>
+                <div class="row control-row">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{macros.camposNuevos(form.nombre, class="form-control")}}        
+                    </div>
+                </div>
+                <div class="row control-row">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{macros.camposNuevos(form.apaterno, class="form-control")}}        
+                    </div>
+                </div>
+                <div class="row control-row">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{macros.camposNuevos(form.amaterno, class="form-control")}}        
+                    </div>
+                </div>
+                <div class="row control-row">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{macros.camposNuevos(form.email, class="form-control")}}        
+                    </div>
+                </div>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+
+                <input type="submit" id="btn1" name="btn1" class="btn btn-danger" value="Editar" >
+                
+                <a href="ABC_Completo" class="btn btn-succes">
+                    <i class="icon-undo icon-white"></i>Cancelar
+                </a>
+            </form>
+
+
+{% endblock %}

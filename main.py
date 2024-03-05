@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, g
+from flask import Flask, redirect, render_template, request, flash, g, url_for
 from forms import UserForm, UserForm2
 from config import DevelopmentConfig
 from flask_wtf.csrf import CSRFProtect
@@ -16,22 +16,20 @@ def page_not_found(e):
 
 @app.route("/index", methods=["GET", "POST"])
 def index():
-    alumno = UserForm2(request.form)
+    alumnos = UserForm2(request.form)
 
     if request.method == "POST":
         alumnoObj = Alumnos(
-            id=alumno.id.data,
-            nombre=alumno.nombre.data,
-            apaterno=alumno.apaterno.data,
-            amaterno=alumno.amaterno.data,
-            email=alumno.email.data
+            id=alumnos.id.data,
+            nombre=alumnos.nombre.data,
+            apaterno=alumnos.apaterno.data,
+            amaterno=alumnos.amaterno.data,
+            email=alumnos.email.data
         )
         db.session.add(alumnoObj)
         db.session.commit()
 
-    return render_template("index.html", form=alumno)
-
-
+    return render_template("index.html", form=alumnos)
 
 @app.route("/alumnos",methods=["GET","POST"])
 def alumnos():
@@ -54,6 +52,58 @@ def alumnos():
 
     return render_template("alumnos.html",form=alumno_clase,nombre=nombre,a_paterno=a_paterno,a_materno=a_materno,email=email,edad=edad)
 
+@app.route("/ABC_Completo", methods=["GET","POST"])
+def ABC_Completo():
+    alumno_form= UserForm2(request.form)
+    alumnoObj = Alumnos.query.all()
+    return render_template("ABC_Completo.html", alumno=alumno_form, alumnos=alumnoObj)
+
+@app.route("/eliminar", methods=["GET","POST"])
+def eliminar():
+    alumno_form= UserForm2(request.form)
+    if request.method == "GET":
+
+        id = request.args.get("id")
+        alumnoObj = db.session.query(Alumnos).filter(Alumnos.id==id).first()
+        alumno_form.id.data = request.args.get("id")
+        alumno_form.nombre.data = alumnoObj.nombre
+        alumno_form.apaterno.data = alumnoObj.apaterno
+        alumno_form.amaterno.data = alumnoObj.amaterno
+        alumno_form.email.data = alumnoObj.email
+    if request.method == "POST":
+        id = request.form["id"]
+        alum = Alumnos.query.filter_by(id=id).first()
+        db.session.delete(alum)
+        db.session.commit()
+        return redirect(url_for("ABC_Completo"))
+    return render_template("eliminar.html", form=alumno_form)
+
+@app.route("/editar", methods=["GET","POST"])
+def editar():
+    alumno_form= UserForm2(request.form)
+    if request.method == "GET":
+        id = request.args.get("id")
+        alumnoObj = db.session.query(Alumnos).filter(Alumnos.id==id).first()
+        alumno_form.id.data = request.args.get("id")
+        alumno_form.nombre.data = alumnoObj.nombre
+        alumno_form.apaterno.data = alumnoObj.apaterno
+        alumno_form.amaterno.data = alumnoObj.amaterno
+        alumno_form.email.data = alumnoObj.email
+    if request.method == "POST":
+        try:
+            id = alumno_form.id.data
+            alumnoObj = Alumnos.query.filter_by(id=id).first()
+            alumnoObj.nombre = alumno_form.nombre.data  
+            alumnoObj.apaterno = alumno_form.apaterno.data
+            alumnoObj.amaterno = alumno_form.amaterno.data
+            alumnoObj.email = alumno_form.email.data
+            db.session.commit()
+        except Exception as e:
+            print(f"Error en la actualizacion: {e}")
+            db.session.rollback()
+        return redirect(url_for("ABC_Completo"))
+    
+    return render_template("editar.html", form=alumno_form)
 
 if __name__ == "__main__":
     csrf.init_app(app)
